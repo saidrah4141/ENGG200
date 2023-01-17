@@ -1,0 +1,63 @@
+// Online C compiler to run C program online
+#include <stdio.h>
+
+int main() {
+    // Write C code here
+    int x =0;
+    scanf("%d", &x);
+    if (x<0){
+        printf("Negative");
+        
+    } else if (x>0) {
+        printf("Positive");
+        
+    } else if(x==0) {
+        printf("Zero!");
+       
+    }
+
+    return 0;
+}
+
+// Online C compiler to run C program online
+#include <stdio.h>
+
+int main() {
+    // Write C code here
+    
+    int myNumbers[] = {25, 50, 75, 100};
+    int i;
+    
+    for (i = 0; i < (sizeof(myNumbers)/4); i++) {
+        printf("The number at index %d is %d\n", i , myNumbers[i]);
+    }
+    return 0;
+}
+
+// Online C compiler to run C program online
+#include <stdio.h>
+
+int main() {
+    // Write C code here
+    float bat_capacity;
+    float efficency;
+    float distance;
+    
+    printf("Enter battery capacity (kW/h)? : ");
+    scanf("%f", &bat_capacity);
+    
+    printf("Enter car efficency (kW/h)/(100km)? : ");
+    scanf("%f", &efficency);
+    
+    printf("Enter distance (km)? : ");
+    scanf("%f", &distance);
+    
+    if( (distance/100)*(efficency) > bat_capacity) {
+        printf("Won't make it");
+    } else {
+        printf("Will make it");
+    }
+    
+   
+    return 0;
+}
