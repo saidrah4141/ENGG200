@@ -1,0 +1,62 @@
+#include "Adafruit_seesaw.h"
+#include <time.h>
+#include <stdio.h>
+
+unsigned long currentMillis;
+unsigned long previousMillis = 0;
+
+
+
+bool pump =false;
+bool light = false;
+Adafruit_seesaw ss;
+
+void setup() {
+  Serial.begin(115200);
+  
+  pinMode(13, OUTPUT); // LED
+  pinMode(8, OUTPUT);
+
+  Serial.println("seesaw Soil Sensor example!");
+  
+
+  if (!ss.begin(0x36)) {
+    Serial.println("ERROR! seesaw not found");
+    while(1) delay(1);
+  } else {
+    Serial.print("seesaw started! version: ");
+    Serial.println(ss.getVersion(), HEX);
+  }
+ 
+ 
+}
+
+void loop() {
+    
+
+  float tempC = ss.getTemp();
+  uint16_t capread = ss.touchRead(0);
+
+  Serial.print("Temperature: "); Serial.print(tempC); Serial.println("*C");
+  Serial.print("Capacitive: "); Serial.println(capread);
+  delay(100);
+currentMillis = millis();
+  if(capread>500){
+    if(previousMillis==0){
+      previousMillis=currentMillis;
+    }
+    digitalWrite(13,HIGH);
+
+  } 
+  if (currentMillis-previousMillis>=5000){
+        digitalWrite(13,LOW);
+        previousMillis=0;
+
+  }
+  
+
+}
+
+  
+
+
