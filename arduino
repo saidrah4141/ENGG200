@@ -1,24 +1,25 @@
-#include "Adafruit_seesaw.h"
+ #include "Adafruit_seesaw.h"
 #include <time.h>
 #include <stdio.h>
 
 unsigned long currentMillis;
 unsigned long previousMillis = 0;
-
-
+unsigned long pumpMillis;
+unsigned long previousPumpMillis=0;
+int ledStrength=20;
 
 bool pump =false;
-bool light = false;
+bool light = true;
 Adafruit_seesaw ss;
 
 void setup() {
   Serial.begin(115200);
-  
+
   pinMode(13, OUTPUT); // LED
-  pinMode(8, OUTPUT);
+  pinMode(9,OUTPUT);
 
   Serial.println("seesaw Soil Sensor example!");
-  
+
 
   if (!ss.begin(0x36)) {
     Serial.println("ERROR! seesaw not found");
@@ -32,7 +33,7 @@ void setup() {
 }
 
 void loop() {
-    
+
 
   float tempC = ss.getTemp();
   uint16_t capread = ss.touchRead(0);
@@ -41,22 +42,47 @@ void loop() {
   Serial.print("Capacitive: "); Serial.println(capread);
   delay(100);
 currentMillis = millis();
-  if(capread>500){
-    if(previousMillis==0){
-      previousMillis=currentMillis;
-    }
-    digitalWrite(13,HIGH);
-
-  } 
-  if (currentMillis-previousMillis>=5000){
-        digitalWrite(13,LOW);
-        previousMillis=0;
-
-  }
+pumpMillis=millis();
   
+  analogWrite(9,ledStrength);
+
+    if (light==true && pumpMillis-previousMillis>=4000){
+      ledStrength=0;
+      light=false;
+    } 
+    if (!light&& pumpMillis-previousMillis>=10000){
+      ledStrength=20;
+      light=true;
+      previousMillis=pumpMillis;
+    }
+
+  
+    
+
+
+
+  if(capread>500 && !pump && pumpMillis-previousPumpMillis>=10000){
+   
+      previousPumpMillis=pumpMillis;
+      pump=true;
+      analogWrite(13,255);
+      if(light) {
+        ledStrength=0;
+      }
+    
+    }
+  
+  if(pumpMillis-previousPumpMillis>=2000 && pump){
+    pump=false;
+    analogWrite(13,0);
+    if(light){
+      ledStrength=20;
+    }
+    
+  
+  }
+
+
 
 }
-
-  
-
 
